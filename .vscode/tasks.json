@@ -1,0 +1,85 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Clean",
+        "type": "shell",
+        "command": "Remove-Item",
+        "args": [
+          "'${workspaceFolder}\\builds\\*'",
+          "-Recurse",
+          "-Force"
+        ],
+        "presentation": {
+          "showReuseMessage": false,
+          "reveal": "silent",
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "Build",
+        "type": "shell",
+        "command": "pdc",
+        "args": [
+          "-sdkpath",
+          "${env:PLAYDATE_SDK_PATH}",
+          "'${workspaceFolder}\\source'",
+          "'${workspaceFolder}/builds/${workspaceFolderBasename}.pdx'"
+        ],
+        "options": {
+          "cwd": "${env:PLAYDATE_SDK_PATH}"
+        },
+        "presentation": {
+          "showReuseMessage": false,
+          "reveal": "silent",
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "Close Existing Sim",
+        "type": "shell",
+        "command": "${workspaceFolder}\\closeSim.ps1",
+        "args": [],
+        "presentation": {
+          "showReuseMessage": false,
+          "reveal": "silent",
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "Run (Simulator)",
+        "type": "shell",
+        "command": "PlaydateSimulator",
+        "args": [
+          "'${workspaceFolder}/builds/${workspaceFolderBasename}.pdx'"
+        ],
+        "presentation": {
+          "showReuseMessage": false,
+          "reveal": "silent",
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "Build and Run (Simulator)",
+        "dependsOn": [
+          "Clean",
+          "Build",
+          "Close Existing Sim",
+          "Run (Simulator)"
+        ],
+        "dependsOrder": "sequence",
+        "presentation": {
+          "showReuseMessage": false,
+          "reveal": "silent",
+          "panel": "shared"
+        },
+        "problemMatcher": [],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  }
